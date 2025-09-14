@@ -80,8 +80,8 @@ Swagger docs are generated with l5-swagger.
 
 
 ## 🧪 Running Tests
-``bash
-./vendor/bin/sail artisan test
+    ``bash
+    ./vendor/bin/sail artisan test
 
 
 ## 🔑 Authentication Flow
