@@ -132,4 +132,6 @@ Swagger docs are generated with l5-swagger.
 2.  PhpMyAdmin runs at port 8088 for DB management.
 3.  Swagger/OpenAPI 3.0 compliant API docs are available for frontend integration.
 
+📌 Author
 
+👤 Deekshith Shetty
