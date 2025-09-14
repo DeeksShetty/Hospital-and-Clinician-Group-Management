@@ -86,11 +86,11 @@ Swagger docs are generated with l5-swagger.
 
 ## 🔑 Authentication Flow
 
-.   Login: POST /api/login → Returns user info + Sanctum token.
-.   Authenticated routes: Pass token in header:
+1.  Login: POST /api/login → Returns user info + Sanctum token.
+2.  Authenticated routes: Pass token in header:
     ```bash
     Authorization: Bearer {token}
-.   Logout: POST /api/logout → Revokes the current token.
+3.  Logout: POST /api/logout → Revokes the current token.
 
 
 ## 📂 Project Structure (Key Parts)
