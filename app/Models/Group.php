@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  *   @OA\Property(property="description", type="string", example="This is a group")
  * )
  */
+
 class Group extends Model
 {
     use HasFactory;

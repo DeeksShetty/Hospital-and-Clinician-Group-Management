@@ -58,11 +58,44 @@
                                         "data": {
                                             "properties": {
                                                 "user": {
-                                                    "$ref": "#/components/schemas/User"
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Admin User"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "admin@eg.com"
+                                                        },
+                                                        "email_verified_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": "2025-09-13T20:03:49.000000Z"
+                                                        },
+                                                        "role": {
+                                                            "type": "string",
+                                                            "example": "admin"
+                                                        },
+                                                        "created_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": "2025-09-13T20:03:50.000000Z"
+                                                        },
+                                                        "updated_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": "2025-09-13T20:03:50.000000Z"
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 },
                                                 "token": {
                                                     "type": "string",
-                                                    "example": "1|SanctumToken123456"
+                                                    "example": "56|BGnFLcmYgsUU54QI5pXaOSCHAl4X8flxtxYc55Sgf6a20136"
                                                 }
                                             },
                                             "type": "object"
@@ -259,7 +292,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Group"
+                                                "$ref": "#/components/schemas/GroupTree"
                                             }
                                         }
                                     },
@@ -679,6 +712,27 @@
     },
     "components": {
         "schemas": {
+            "GroupTree": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Group"
+                    },
+                    {
+                        "properties": {
+                            "child_groups": {
+                                "description": "List of child groups",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/GroupTree"
+                                },
+                                "example": []
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "GroupResource": {
                 "title": "Group Resource",
                 "description": "Group resource representation",
@@ -791,12 +845,12 @@
     },
     "tags": [
         {
-            "name": "Groups",
-            "description": "Group management APIs"
-        },
-        {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "Groups",
+            "description": "Groups"
         }
     ]
 }

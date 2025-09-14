@@ -33,8 +33,16 @@ class AuthController extends Controller
      *       @OA\Property(property="status", type="boolean", example=true),
      *       @OA\Property(property="message", type="string", example="Login successful"),
      *       @OA\Property(property="data", type="object",
-     *         @OA\Property(property="user", ref="#/components/schemas/User"),
-     *         @OA\Property(property="token", type="string", example="1|SanctumToken123456")
+     *         @OA\Property(property="user", type="object",
+     *           @OA\Property(property="id", type="integer", example=1),
+     *           @OA\Property(property="name", type="string", example="Admin User"),
+     *           @OA\Property(property="email", type="string", example="admin@eg.com"),
+     *           @OA\Property(property="email_verified_at", type="string", format="date-time", example="2025-09-13T20:03:49.000000Z"),
+     *           @OA\Property(property="role", type="string", example="admin"),
+     *           @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-13T20:03:50.000000Z"),
+     *           @OA\Property(property="updated_at", type="string", format="date-time", example="2025-09-13T20:03:50.000000Z")
+     *         ),
+     *         @OA\Property(property="token", type="string", example="56|BGnFLcmYgsUU54QI5pXaOSCHAl4X8flxtxYc55Sgf6a20136")
      *       )
      *     )
      *   ),
@@ -62,6 +70,7 @@ class AuthController extends Controller
      *   )
      * )
      */
+
     public function login(Request $request){
         try{
 
@@ -76,9 +85,7 @@ class AuthController extends Controller
     
             //checking is password match and return message if email or password not matches
             if(! $user || ! Hash::check($credentials['password'],$user->password)){
-                return response()->json([
-                    'message' => 'Invalid login credentials',
-                ], 401);
+                return $this->errorResponse(401,'Invalid login credentials');
             }
     
             //deleting old token
@@ -97,13 +104,13 @@ class AuthController extends Controller
     }
 
 
-    /**
+   /**
      * @OA\Post(
      *   path="/api/logout",
      *   tags={"Auth"},
      *   summary="User logout",
      *   description="Revoke the current Sanctum token.",
-     *   security={{"sanctum":{}}},
+     *   security={{"sanctum":{}}}, 
      *   @OA\Response(
      *     response=200,
      *     description="Logged out successfully.",
@@ -138,6 +145,7 @@ class AuthController extends Controller
      *   )
      * )
      */
+
     public function logout(Request $request)
     {
         try{

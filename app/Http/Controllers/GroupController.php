@@ -15,6 +15,21 @@ use Illuminate\Http\Request;
  *   description="Group management APIs"
  * )
  */
+
+/**
+ * @OA\Schema(
+ *   schema="GroupTree",
+ *   type="object",
+ *   allOf={@OA\Schema(ref="#/components/schemas/Group")},
+ *   @OA\Property(
+ *     property="child_groups",
+ *     type="array",
+ *     description="List of child groups",
+ *     @OA\Items(ref="#/components/schemas/GroupTree"),
+ *     example={}
+ *   )
+ * )
+ */
 class GroupController extends Controller
 {
     protected GroupService $groupService;
@@ -128,7 +143,7 @@ class GroupController extends Controller
         }
     }
 
-     /**
+    /**
     * @OA\Get(
     *   path="/api/groups",
     *   tags={"Groups"},
@@ -141,7 +156,7 @@ class GroupController extends Controller
     *       type="object",
     *       @OA\Property(property="status", type="boolean", example=true),
     *       @OA\Property(property="message", type="string", example="Group list with full tree structure."),
-    *       @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Group"))
+    *       @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/GroupTree"))
     *     )
     *   ),
     *   @OA\Response(
@@ -156,7 +171,7 @@ class GroupController extends Controller
     *     )
     *   )
     * )
-     */
+    **/
     public function getGroupList(Request $request){
         try{
             $groupList = $this->groupListRecurse();
