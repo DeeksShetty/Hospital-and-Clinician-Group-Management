@@ -35,8 +35,88 @@ This project was developed as part of an assessment task given by EGDK INDIA PRI
 
 ## ⚙️ Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/DeeksShetty/Hospital-and-Clinician-Group-Management.git
-   cd Hospital-and-Clinician-Group-Management
-2. Copy environment file
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/DeeksShetty/Hospital-and-Clinician-Group-Management.git
+    cd Hospital-and-Clinician-Group-Management
+2.  Copy environment file
+    ```bash
+    cp .env.example .env
+3.  Update .env with your DB credentials (already set for Sail):
+    ```bash
+    DB_CONNECTION=mysql
+    DB_HOST=mysql
+    DB_PORT=3306
+    DB_DATABASE="h_and_c_group_management"
+    DB_USERNAME=admin
+    DB_PASSWORD=password
+4.  Build and start containers
+    ```bash
+    ./vendor/bin/sail up -d
+    API available at: http://localhost:8080
+    PhpMyAdmin: http://localhost:8088 (login with DB_USERNAME / DB_PASSWORD)
+5.  Install dependencies
+    ```bash
+    ./vendor/bin/sail composer install
+6.  Run migrations
+    ```bash
+    ./vendor/bin/sail artisan migrate
+7.  Run seeder (create admin user)
+    ```bash
+    ./vendor/bin/sail artisan db:seed
+8.  Generate app key
+    ```bash
+    ./vendor/bin/sail artisan key:generate
+
+
+
+## 📖 API Documentation
+
+Swagger docs are generated with l5-swagger.
+1.  Generate docs:
+    ```bash
+    ./vendor/bin/sail artisan l5-swagger:generate
+2.  Access UI: http://localhost:8080/api/documentation
+
+
+## 🧪 Running Tests
+``bash
+./vendor/bin/sail artisan test
+
+
+## 🔑 Authentication Flow
+
+.   Login: POST /api/login → Returns user info + Sanctum token.
+.   Authenticated routes: Pass token in header:
+    ```bash
+    Authorization: Bearer {token}
+.   Logout: POST /api/logout → Revokes the current token.
+
+
+## 📂 Project Structure (Key Parts)
+
+    ```bash
+    app/
+    ├── Http/
+    │   ├── Controllers/
+    │   │   ├── AuthController.php
+    │   │   ├── GroupController.php
+    │   ├── Requests/
+    │   │   ├── CreateGroupRequest.php
+    │   ├── Traits/
+    │   │   ├── ResponseTrait.php
+    │
+    ├── Models/
+    │   ├── Group.php
+    │   ├── User.php
+    │
+    ├── Services/
+    │   ├── GroupService.php
+
+## 📌 Notes
+
+1.  Built with Laravel Sail (Docker-first dev environment).
+2.  PhpMyAdmin runs at port 8088 for DB management.
+3.  Swagger/OpenAPI 3.0 compliant API docs are available for frontend integration.
+
+
