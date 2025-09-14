@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 /**
  * @OA\Schema(
  *   schema="Group",
@@ -17,7 +18,6 @@ use Illuminate\Database\Eloquent\Model;
  *   @OA\Property(property="description", type="string", example="This is a group")
  * )
  */
-
 class Group extends Model
 {
     use HasFactory;

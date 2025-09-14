@@ -348,7 +348,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Group"
+                                "$ref": "#/components/schemas/GroupCreateRequest"
                             }
                         }
                     }
@@ -732,6 +732,32 @@
                         "type": "object"
                     }
                 ]
+            },
+            "GroupCreateRequest": {
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "parent_id": {
+                        "type": "integer",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Test Group"
+                    },
+                    "image": {
+                        "type": "string",
+                        "example": "group.png",
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "This is a group"
+                    }
+                },
+                "type": "object"
             },
             "GroupResource": {
                 "title": "Group Resource",

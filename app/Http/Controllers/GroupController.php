@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
  * )
  */
 
+
 /**
  * @OA\Schema(
  *   schema="GroupTree",
@@ -30,16 +31,29 @@ use Illuminate\Http\Request;
  *   )
  * )
  */
+
 class GroupController extends Controller
 {
     protected GroupService $groupService;
 
+    
+    /**
+     * @OA\Schema(
+     *   schema="GroupCreateRequest",
+     *   type="object",
+     *   required={"name"},
+     *   @OA\Property(property="parent_id", type="integer", nullable=true, example=null),
+     *   @OA\Property(property="name", type="string", example="Test Group"),
+     *   @OA\Property(property="image", type="string", nullable=true, example="group.png"),
+     *   @OA\Property(property="description", type="string", example="This is a group")
+     * )
+     */
     public function __construct(GroupService $groupService)
     {
         $this->groupService = $groupService;
     }
 
-     /**
+    /**
     * @OA\Post(
     *   path="/api/groups",
     *   tags={"Groups"},
@@ -47,7 +61,7 @@ class GroupController extends Controller
     *   security={{"sanctum":{}}},
     *   @OA\RequestBody(
     *     required=true,
-    *     @OA\JsonContent(ref="#/components/schemas/Group")
+    *     @OA\JsonContent(ref="#/components/schemas/GroupCreateRequest")
     *   ),
     *   @OA\Response(
     *     response=201,
@@ -71,7 +85,7 @@ class GroupController extends Controller
     *     )
     *   )
     * )
-     */
+    */
     public function createGroup(CreateGroupRequest $request){
         try{
             $group = Group::create($request->validated());
@@ -80,7 +94,6 @@ class GroupController extends Controller
             return $this->errorResponse(400,'Something went wrong',$e->getMessage());
         }
     }
-
 
     /**
     * @OA\Put(
