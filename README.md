@@ -53,8 +53,6 @@ This project was developed as part of an assessment task given by EGDK INDIA PRI
 4.  Build and start containers
     ```bash
     ./vendor/bin/sail up -d
-    API available at: http://localhost:8080
-    PhpMyAdmin: http://localhost:8088 (login with DB_USERNAME / DB_PASSWORD)
 5.  Install dependencies
     ```bash
     ./vendor/bin/sail composer install
@@ -68,6 +66,23 @@ This project was developed as part of an assessment task given by EGDK INDIA PRI
     ```bash
     ./vendor/bin/sail artisan key:generate
 
+
+## 🌐 API Access
+
+Once the application is running via Sail:
+
+- Site URL: http://localhost:8080
+- API URL: http://localhost:8080/api  
+- PhpMyAdmin: http://localhost:8088 (login with DB_USERNAME / DB_PASSWORD)
+
+### Available Endpoints
+- POST /login
+- POST /logout
+- GET /groups
+- GET /groups/{id}
+- POST /groups
+- PUT /groups/{id}
+- DELETE /groups/{id}
 
 
 ## 📖 API Documentation
