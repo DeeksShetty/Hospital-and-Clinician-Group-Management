@@ -80,8 +80,8 @@ Swagger docs are generated with l5-swagger.
 
 
 ## 🧪 Running Tests
-    ``bash
     ./vendor/bin/sail artisan test
+
 
 
 ## 🔑 Authentication Flow
@@ -94,8 +94,6 @@ Swagger docs are generated with l5-swagger.
 
 
 ## 📂 Project Structure (Key Parts)
-
-    ```bash
     app/
     ├── Http/
     │   ├── Controllers/
