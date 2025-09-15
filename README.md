@@ -46,7 +46,7 @@ It is recommended to clone the repository inside your WSL2 home directory (e.g.,
 This improves performance and avoids permission issues when Docker mounts project files.
 Example:
     ```bash
-    C:\Users\Deekshith shetty>wsl
+    C:\Users\<user name>>wsl
     cd ~/projects
     git clone https://github.com/DeeksShetty/Hospital-and-Clinician-Group-Management.git
 
