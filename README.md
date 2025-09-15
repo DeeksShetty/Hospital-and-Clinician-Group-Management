@@ -45,10 +45,10 @@ You can clone the repository anywhere on your system. Docker Desktop (macOS) or 
 It is recommended to clone the repository inside your WSL2 home directory (e.g., /home/<username>/projects/...).
 This improves performance and avoids permission issues when Docker mounts project files.
 Example:
-```bash
-C:\Users\Deekshith shetty>wsl
-cd ~/projects
-git clone https://github.com/DeeksShetty/Hospital-and-Clinician-Group-Management.git
+    ```bash
+    C:\Users\Deekshith shetty>wsl
+    cd ~/projects
+    git clone https://github.com/DeeksShetty/Hospital-and-Clinician-Group-Management.git
 
 2.  Copy environment file
     ```bash
