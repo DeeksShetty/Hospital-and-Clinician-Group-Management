@@ -12,13 +12,27 @@ use Illuminate\Http\Request;
 
 class GroupControllerTest extends TestCase
 {
-    private function userLogin(){
+    use \Illuminate\Foundation\Testing\RefreshDatabase;
+    /**
+     * Create (or ensure) a user with the given role and return a valid bearer token.
+     * Defaults to admin with password 'password'.
+     */
+    private function userLogin(string $role = 'admin', ?string $email = null): string
+    {
+        $email = $email ?? ($role === 'admin' ? 'admin@eg.com' : 'member@eg.com');
+
+        // Create user in the test database
+        \App\Models\User::factory()->create([
+            'email' => $email,
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'role' => $role,
+        ]);
+
         $response = $this->postJson('/api/login', [
-            'email' => 'admin@eg.com',//using a base user created using seeder
+            'email' => $email,
             'password' => 'password',
         ]);
 
-        // Assert the response contains a token
         $response->assertStatus(200)
                  ->assertJsonStructure([
                     'status',
@@ -27,8 +41,8 @@ class GroupControllerTest extends TestCase
                         'token'
                     ]
                  ]);
-        $token = $response->json('data.token');
-        return $token;
+
+        return $response->json('data.token');
     }
 
     private function createGroup($prefix='First',$parentId=null){
@@ -272,6 +286,59 @@ class GroupControllerTest extends TestCase
         $this->assertDatabaseMissing('groups', [
             'id' => $group->id,
         ]);
+    }
+
+    public function test_member_cannot_modify_groups_but_can_view()
+    {
+        // member login
+        $memberToken = $this->userLogin('member');
+
+        // Try to create a group as member
+        $payload = [
+            'name' => 'Member Created',
+            'parent_id' => null,
+            'description' => 'Member cannot create',
+        ];
+
+        $createResponse = $this->postJson('/api/groups', $payload, [
+            'Authorization' => 'Bearer ' . $memberToken
+        ]);
+
+        $createResponse->assertStatus(403);
+
+        // Create a group as admin to test view
+        $adminToken = $this->userLogin('admin','admin2@eg.com');
+        $group = Group::factory()->create(['name' => 'Visible Group']);
+
+        // Member should be able to view details
+        $viewResponse = $this->getJson('/api/groups/' . $group->id, [
+            'Authorization' => 'Bearer ' . $memberToken
+        ]);
+        $viewResponse->assertStatus(200)
+            ->assertJson(['status' => true]);
+
+        // Member should be able to list groups
+        $listResponse = $this->getJson('/api/groups', [
+            'Authorization' => 'Bearer ' . $memberToken
+        ]);
+        $listResponse->assertStatus(200)
+            ->assertJson(['status' => true]);
+
+        // Member cannot delete
+        $deleteResponse = $this->deleteJson('/api/groups/' . $group->id, [], [
+            'Authorization' => 'Bearer ' . $memberToken
+        ]);
+        $deleteResponse->assertStatus(403);
+
+        // Member cannot update
+        $updateResponse = $this->putJson('/api/groups/' . $group->id, [
+            'name' => 'Attempt Update',
+            'parent_id' => null,
+            'description' => 'Attempt',
+        ], [
+            'Authorization' => 'Bearer ' . $memberToken
+        ]);
+        $updateResponse->assertStatus(403);
     }
 
 }
