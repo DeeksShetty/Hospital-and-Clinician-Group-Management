@@ -14,6 +14,7 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
+        //create admin user
          User::updateOrCreate(
             ['email' => 'admin@eg.com'], // unique check
             [
@@ -22,6 +23,18 @@ class AdminSeeder extends Seeder
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
                 'role' => 'admin',
+            ]
+        );
+
+        //create member user
+        User::updateOrCreate(
+            ['email' => 'member@eg.com'], // unique check
+            [
+                'name' => 'Member User',
+                'email' => 'member@eg.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+                'role' => 'member',
             ]
         );
     }

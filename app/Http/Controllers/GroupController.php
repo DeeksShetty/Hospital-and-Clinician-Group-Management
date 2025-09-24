@@ -8,6 +8,7 @@ use App\Services\GroupService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+// intentionally using fully-qualified return types for JsonResponse and Collection
 
 /**
  * @OA\Tag(
@@ -86,7 +87,8 @@ class GroupController extends Controller
     *   )
     * )
     */
-    public function createGroup(CreateGroupRequest $request){
+    public function createGroup(CreateGroupRequest $request): \Illuminate\Http\JsonResponse
+    {
         try{
             $group = Group::create($request->validated());
             return $this->successResponse(201,'Group created successfully.',new GroupResource($group));
@@ -137,7 +139,8 @@ class GroupController extends Controller
     *   )
     * )
      */
-    public function updateGroup(CreateGroupRequest $request,$id){
+    public function updateGroup(CreateGroupRequest $request, int $id): \Illuminate\Http\JsonResponse
+    {
         try{
             $group = Group::findOrFail($id);
             $newParentId = $request->parent_id;
@@ -185,7 +188,8 @@ class GroupController extends Controller
     *   )
     * )
     **/
-    public function getGroupList(Request $request){
+    public function getGroupList(Request $request): \Illuminate\Http\JsonResponse
+    {
         try{
             $groupList = $this->groupListRecurse();
             return $this->successResponse(200,'Group list with full tree structure.',$groupList);
@@ -194,8 +198,11 @@ class GroupController extends Controller
         }
     }
 
-    private function groupListRecurse($parentId = null){
-        $groups = Group::select('id','parent_id','name','image','description')->where('parent_id',$parentId)->get();
+    private function groupListRecurse(?int $parentId = null): \Illuminate\Support\Collection
+    {
+        $groups = Group::select('id','parent_id','name','image','description')
+            ->where('parent_id', $parentId)
+            ->get();
         foreach($groups as $group){
             $group->child_groups = $this->groupListRecurse($group->id);
         }
@@ -237,7 +244,8 @@ class GroupController extends Controller
     *   )
     * )
      */
-    public function getGroupDetail($id){
+    public function getGroupDetail(int $id): \Illuminate\Http\JsonResponse
+    {
         try{
             $group = Group::findOrFail($id);
             return $this->successResponse(200,'Group detail.',new GroupResource($group));
@@ -289,7 +297,8 @@ class GroupController extends Controller
     *   )
     * )
      */
-    public function deleteGroup($id){
+    public function deleteGroup(int $id): \Illuminate\Http\JsonResponse
+    {
         try{
             $isParentOfAny = Group::where('parent_id', $id)->exists();
             if($isParentOfAny){

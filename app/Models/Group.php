@@ -27,4 +27,17 @@ class Group extends Model
         'image',
         'description',
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array<string,string>
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'parent_id' => 'integer',
+        'name' => 'string',
+        'image' => 'string',
+        'description' => 'string',
+    ];
 }

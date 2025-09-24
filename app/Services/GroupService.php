@@ -8,7 +8,7 @@ class GroupService
     
      //Prevent self parenting.
     
-    public function isSelfParent($id,$parentId)
+    public function isSelfParent(int $id, ?int $parentId): bool
     {
         return $id === $parentId;
     }
@@ -16,15 +16,15 @@ class GroupService
     
      //Check if potentialParentId is a descendant of groupId.
      
-    public function isDescendant($groupId,$potentialParentId)
+    public function isDescendant(int $groupId, int $potentialParentId): bool
     {
         $children = Group::where('parent_id', $groupId)->pluck('id');
 
         foreach ($children as $childId) {
-            if ($childId == $potentialParentId) {
+            if ((int) $childId === $potentialParentId) {
                 return true;
             }
-            if ($this->isDescendant($childId, $potentialParentId)) {
+            if ($this->isDescendant((int) $childId, $potentialParentId)) {
                 return true;
             }
         }
@@ -34,11 +34,11 @@ class GroupService
     
      // Check if potentialParentId is a descendant of groupId for unit test.
      
-    public function isDescendantArray($groupId,$potentialParentId,$groups)
+    public function isDescendantArray(int $groupId, int $potentialParentId, array $groups): bool
     {
         foreach ($groups as $g) {
-            if ($g['parent_id'] === $groupId) {
-                if ($g['id'] === $potentialParentId) {
+            if (($g['parent_id'] ?? null) === $groupId) {
+                if (($g['id'] ?? null) === $potentialParentId) {
                     return true;
                 }
                 if ($this->isDescendantArray($g['id'], $potentialParentId, $groups)) {

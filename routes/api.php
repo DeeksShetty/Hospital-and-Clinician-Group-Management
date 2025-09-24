@@ -9,10 +9,13 @@ Route::post('/login',[AuthController::class,'login']);
 Route::middleware('auth:sanctum')->group(function(){
     Route::post('/logout',[AuthController::class,'logout']);
     Route::group(['prefix'=>'groups'],function(){
-        Route::post('/',[GroupController::class,'createGroup'])->name('group.create');
+        // Admin-only routes
+        Route::post('/',[GroupController::class,'createGroup'])->name('group.create')->middleware('role:admin');
+        Route::put('/{id}',[GroupController::class,'updateGroup'])->name('group.update')->middleware('role:admin');
+        Route::delete('/{id}',[GroupController::class,'deleteGroup'])->name('group.delete')->middleware('role:admin');
+
+        // Member and admin can view
         Route::get('/',[GroupController::class,'getGroupList'])->name('group.list');
         Route::get('/{id}',[GroupController::class,'getGroupDetail'])->name('group.detail');
-        Route::put('/{id}',[GroupController::class,'updateGroup'])->name('group.update');
-        Route::delete('/{id}',[GroupController::class,'deleteGroup'])->name('group.delete');
     });
 });

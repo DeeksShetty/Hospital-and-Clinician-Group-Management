@@ -112,11 +112,63 @@ Swagger docs are generated with l5-swagger.
 
 ## 🔑 Authentication Flow
 
-1.  Login: POST /api/login → Returns user info + Sanctum token.
-2.  Authenticated routes: Pass token in header:
+1. Login: POST /api/login → Returns user info + Sanctum token.
+2. Authenticated routes: Pass token in header:
     ```bash
     Authorization: Bearer {token}
-3.  Logout: POST /api/logout → Revokes the current token.
+    ```
+3. Logout: POST /api/logout → Revokes the current token.
+
+## 🛡️ Role-based authorization
+
+This project includes a simple role-based authorization layer to protect group management actions.
+
+- Roles supported: `admin`, `member`. The role is stored on the `role` column of the `users` table (see `database/seeders/AdminSeeder.php`).
+- Permissions enforced:
+  - `admin`: create, update and delete groups (POST /groups, PUT /groups/{id}, DELETE /groups/{id}).
+  - `member`: can list and view groups (GET /groups, GET /groups/{id}).
+
+Middleware and usage
+- Middleware: `App\\Http\\Middleware\\EnsureUserHasRole` is registered as a route middleware alias `role`.
+- Apply it to routes together with authentication. Example (in `routes/api.php`):
+    ```php
+    Route::post('/groups', [GroupController::class, 'store'])
+        ->middleware(['auth:sanctum', 'role:admin']);
+
+    Route::put('/groups/{id}', [GroupController::class, 'update'])
+        ->middleware(['auth:sanctum', 'role:admin']);
+
+    Route::delete('/groups/{id}', [GroupController::class, 'destroy'])
+        ->middleware(['auth:sanctum', 'role:admin']);
+
+    // Public to authenticated members and admins
+    Route::get('/groups', [GroupController::class, 'index'])
+        ->middleware(['auth:sanctum', 'role:admin,member']);
+
+    Route::get('/groups/{id}', [GroupController::class, 'show'])
+        ->middleware(['auth:sanctum', 'role:admin,member']);
+    ```
+
+Behavior and responses
+- If a request is unauthenticated, the API returns HTTP 401 (JSON error).
+- If a request is authenticated but the user's role does not match the required role(s), the API returns HTTP 403 with a JSON error message.
+
+Seeding users
+- To create the default admin (and any seed data) run:
+    ```bash
+    ./vendor/bin/sail artisan db:seed
+    ```
+- Check `database/seeders/AdminSeeder.php` for the seeded admin credentials. You can also create additional users via factories or your own seeders; ensure the `role` column is set to either `admin` or `member`.
+
+Quick curl example (login + list groups as a member)
+1. Login to get token:
+    ```bash
+    curl -X POST http://localhost:8080/api/login -H "Content-Type: application/json" -d '{"email":"member@example.com","password":"password"}'
+    ```
+2. Use token to list groups:
+    ```bash
+    curl http://localhost:8080/api/groups -H "Authorization: Bearer {token}"
+    ```
 
 
 ## 📂 Project Structure (Key Parts)
